@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,35 +50,27 @@ public class PostServiceImpl implements PostService {
     @Override
     public void createPost(PostDTO postDTO) {
         Post post = postMapper.toEntity(postDTO);
-        post.setCreatedBy("tjlee");
-        post.setCreatedDate(Instant.now());
-        post.setLastModifiedBy("tjlee");
-        post.setLastModifiedDate(Instant.now());
-        final Post post1 = postRepository.save(post);
-
+        final Post post1 = postRepository.save(post);   // post id load
         List<PostComment> postComments = postCommentMapper.postCommentDTOsToPostComments(new ArrayList<>(postDTO.getPostCommentDTOs()));
         postComments.forEach(comment -> {
-            comment.setCreatedBy("tjlee");
-            comment.setCreatedDate(Instant.now());
-            comment.setLastModifiedBy("tjlee");
-            comment.setLastModifiedDate(Instant.now());
             comment.setPost(post1);
             postCommentRepository.save(comment);
         });
-
         PostDetails postDetails = postDetailsMapper.toEntity(postDTO.getPostDetailsDTO());
-        postDetails.setCreatedBy("tjlee");
-        postDetails.setCreatedDate(Instant.now());
-        postDetails.setLastModifiedBy("tjlee");
-        postDetails.setLastModifiedDate(Instant.now());
         postDetails.setPost(post1);
         postDetailsRepository.save(postDetails);
     }
 
     @Override
     public void updatePost(PostDTO postDTO) {
-        Post post = postMapper.toEntity(postDTO);
-        postRepository.save(post);
+        postRepository.findById(postDTO.getId()).ifPresent(post -> post.setTitle(postDTO.getTitle()));
+        Optional.ofNullable(postDTO.getPostCommentDTOs())
+                .ifPresent(comments -> comments
+                        .forEach(commentDTO ->postCommentRepository.findById(commentDTO.getId())
+                                .ifPresent(comment -> comment.setReview(commentDTO.getReview()))));
+        Optional.ofNullable(postDTO.getPostDetailsDTO())
+                .ifPresent(s -> postDetailsRepository.findById(s.getId())
+                        .ifPresent(detail -> detail.setContent(s.getContent())));
     }
 
     @Override

@@ -21,9 +21,9 @@ public class PostResource {
      * POST  /post : Create Post
      */
     @PostMapping("/post")
-    @ApiOperation( value="addPost" , notes = "1) Add Post Entity")
-    public ResponseEntity<PostDTO> addPost(@RequestBody PostDTO postDTO) throws Exception {
-        postService.addPost(postDTO);
+    @ApiOperation( value="createPost" , notes = "1) Create Post Entity")
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) throws Exception {
+        postService.createPost(postDTO);
         return ResponseEntity.created(null).build();
     }
 
@@ -31,7 +31,7 @@ public class PostResource {
      * PUT  /post : Update Post
      */
     @PutMapping("/post")
-    @ApiOperation( value="updatePost" , notes = "1) Modify Post Entity")
+    @ApiOperation( value="updatePost" , notes = "1) Update Post Entity")
     public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO) throws Exception {
         postService.updatePost(postDTO);
         return ResponseEntity.accepted().build();

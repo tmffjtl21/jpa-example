@@ -27,8 +27,7 @@ public class PostDetails extends AbstractAuditingEntity implements Serializable 
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @OneToOne
     private Post post;
 
     public Long getId() {

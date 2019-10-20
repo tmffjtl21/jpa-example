@@ -28,6 +28,8 @@ public class SwaggerConfig {
 	
 	static {
 		responseMessages.add(new ResponseMessageBuilder().code(200).message("OK").build());
+		responseMessages.add(new ResponseMessageBuilder().code(201).message("Created").build());
+		responseMessages.add(new ResponseMessageBuilder().code(202).message("Accepted").build());
 		responseMessages.add(new ResponseMessageBuilder().code(400).message("Bad Request").build());
 		responseMessages.add(new ResponseMessageBuilder().code(401).message("Unauthorized").build());
 		responseMessages.add(new ResponseMessageBuilder().code(403).message("Forbidden").build());
@@ -65,6 +67,9 @@ public class SwaggerConfig {
 
 	            .useDefaultResponseMessages(false)
 	            .globalResponseMessage(RequestMethod.GET, responseMessages)
+				.globalResponseMessage(RequestMethod.POST, responseMessages)
+				.globalResponseMessage(RequestMethod.PUT, responseMessages)
+				.globalResponseMessage(RequestMethod.DELETE, responseMessages)
 				;
 	}
 

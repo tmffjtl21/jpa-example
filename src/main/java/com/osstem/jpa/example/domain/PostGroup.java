@@ -10,14 +10,14 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * The Post entity.
+ * The PostComment entity.
  *
  * @author LEE TAEJIN
  * @since 2019.10.18
  */
 @Entity
-@Table(name = "POST")
-public class Post extends AbstractAuditingEntity implements Serializable {
+@Table(name = "POST_GROUP")
+public class PostGroup extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,17 +29,18 @@ public class Post extends AbstractAuditingEntity implements Serializable {
     @Column(name = "title", length = 50)
     private String title;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PostComment> postComments = new HashSet<>();
+    @Column(name = "content", length = 255)
+    private String content;
 
-    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PostDetails postDetails;
+    @ManyToOne
+    @JoinColumn(name = "directory_id", foreignKey = @ForeignKey(name = "FK_upost_group_directory"))
+    private Directory directory;
 
-    @ManyToMany(mappedBy = "posts")
-    private Set<Directory> directories = new HashSet<>();
-
-    @ManyToMany(mappedBy = "posts")
-    private Set<PostGroup> postGroups = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "POST_GROUP_POST",
+            joinColumns = @JoinColumn(name="post_group_id", referencedColumnName="id"),
+            inverseJoinColumns = @JoinColumn(name="post_id", referencedColumnName="id"))
+    private Set<Post> posts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -57,36 +58,28 @@ public class Post extends AbstractAuditingEntity implements Serializable {
         this.title = title;
     }
 
-    public Set<PostComment> getPostComments() {
-        return postComments;
+    public String getContent() {
+        return content;
     }
 
-    public void setPostComments(Set<PostComment> postComments) {
-        this.postComments = postComments;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public PostDetails getPostDetails() {
-        return postDetails;
+    public Directory getDirectory() {
+        return directory;
     }
 
-    public void setPostDetails(PostDetails postDetails) {
-        this.postDetails = postDetails;
+    public void setDirectory(Directory directory) {
+        this.directory = directory;
     }
 
-    public Set<Directory> getDirectories() {
-        return directories;
+    public Set<Post> getPosts() {
+        return posts;
     }
 
-    public void setDirectories(Set<Directory> directories) {
-        this.directories = directories;
-    }
-
-    public Set<PostGroup> getPostGroups() {
-        return postGroups;
-    }
-
-    public void setPostGroups(Set<PostGroup> postGroups) {
-        this.postGroups = postGroups;
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     @Override
@@ -97,7 +90,7 @@ public class Post extends AbstractAuditingEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Post that = (Post) o;
+        PostGroup that = (PostGroup) o;
         if (that.getId() == null || getId() == null) {
             return false;
         }

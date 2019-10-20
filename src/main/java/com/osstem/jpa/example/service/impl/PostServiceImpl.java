@@ -14,7 +14,6 @@ import com.osstem.jpa.example.service.mapper.PostMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +50,19 @@ public class PostServiceImpl implements PostService {
     public void createPost(PostDTO postDTO) {
         Post post = postMapper.toEntity(postDTO);
         final Post post1 = postRepository.save(post);   // post id load
-        List<PostComment> postComments = postCommentMapper.postCommentDTOsToPostComments(new ArrayList<>(postDTO.getPostCommentDTOs()));
-        postComments.forEach(comment -> {
-            comment.setPost(post1);
-            postCommentRepository.save(comment);
-        });
-        PostDetails postDetails = postDetailsMapper.toEntity(postDTO.getPostDetailsDTO());
-        postDetails.setPost(post1);
-        postDetailsRepository.save(postDetails);
+
+        if(postDTO.getPostCommentDTOs() != null){
+            List<PostComment> postComments = postCommentMapper.postCommentDTOsToPostComments(new ArrayList<>(postDTO.getPostCommentDTOs()));
+            postComments.forEach(comment -> {
+                comment.setPost(post1);
+                postCommentRepository.save(comment);
+            });
+        }
+        if(postDTO.getPostDetailsDTO() != null){
+            PostDetails postDetails = postDetailsMapper.toEntity(postDTO.getPostDetailsDTO());
+            postDetails.setPost(post1);
+            postDetailsRepository.save(postDetails);
+        }
     }
 
     @Override

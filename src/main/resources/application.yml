@@ -1,0 +1,34 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        cache.use_second_level_cache: false
+        default_batch_fetch_size: 20
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/jpa_sample?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: tjlee
+    password: tjlee
+    #    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+
+  # devtools option
+  devtools:
+    livereload:
+      enabled: true
+  freemarker:
+    cache: false
+  thymeleaf:
+    cache: false
+
+  # Static resources reloading during development
+  profiles:
+    active: dev

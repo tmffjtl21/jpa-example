@@ -5,7 +5,7 @@ import com.osstem.jpa.example.service.dto.PostDTO;
 import java.util.List;
 
 public interface PostService {
-    void createPost(PostDTO postDTO);
+    PostDTO createPost(PostDTO postDTO);
 
     void updatePost(PostDTO postDTO);
 

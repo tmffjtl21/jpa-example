@@ -29,10 +29,10 @@ public class Post extends AbstractAuditingEntity implements Serializable {
     @Column(name = "title", length = 50)
     private String title;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostComment> postComments = new HashSet<>();
 
-    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private PostDetails postDetails;
 
     @ManyToMany(mappedBy = "posts")

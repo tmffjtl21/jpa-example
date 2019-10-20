@@ -47,10 +47,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void createPost(PostDTO postDTO) {
+    public PostDTO createPost(PostDTO postDTO) {
         Post post = postMapper.toEntity(postDTO);
         final Post post1 = postRepository.save(post);   // post id load
-
         if(postDTO.getPostCommentDTOs() != null){
             List<PostComment> postComments = postCommentMapper.postCommentDTOsToPostComments(new ArrayList<>(postDTO.getPostCommentDTOs()));
             postComments.forEach(comment -> {
@@ -63,6 +62,8 @@ public class PostServiceImpl implements PostService {
             postDetails.setPost(post1);
             postDetailsRepository.save(postDetails);
         }
+        postDTO.setId(post1.getId());
+        return postDTO;
     }
 
     @Override

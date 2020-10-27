@@ -8,58 +8,60 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class PostDTO implements Serializable {
+public class DirectoryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
 
-    private String title;
+    private String pid;
 
-    private PostDetailsDTO postDetails;
+    private String name;
 
-    private Set<PostCommentDTO> postComments = new HashSet<>();
+    private Set<PostDTO> posts = new HashSet<>();
 
-    private Set<PostGroupDTO> postGroups = new HashSet<>();
+//    private Set<PostGroupDTO> postGroups = new HashSet<>();
 
-    public Long getId() {
+    private DirectoryPropertyDTO directoryPropertyDTO;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getPid() {
+        return pid;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
-    public PostDetailsDTO getPostDetails() {
-        return postDetails;
+    public String getName() {
+        return name;
     }
 
-    public void setPostDetails(PostDetailsDTO postDetails) {
-        this.postDetails = postDetails;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Set<PostCommentDTO> getPostComments() {
-        return postComments;
+    public Set<PostDTO> getPosts() {
+        return posts;
     }
 
-    public void setPostComments(Set<PostCommentDTO> postComments) {
-        this.postComments = postComments;
+    public void setPosts(Set<PostDTO> posts) {
+        this.posts = posts;
     }
 
-    public Set<PostGroupDTO> getPostGroups() {
-        return postGroups;
+    public DirectoryPropertyDTO getDirectoryPropertyDTO() {
+        return directoryPropertyDTO;
     }
 
-    public void setPostGroups(Set<PostGroupDTO> postGroups) {
-        this.postGroups = postGroups;
+    public void setDirectoryPropertyDTO(DirectoryPropertyDTO directoryPropertyDTO) {
+        this.directoryPropertyDTO = directoryPropertyDTO;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class PostDTO implements Serializable {
             return false;
         }
 
-        PostDTO that = (PostDTO) o;
+        DirectoryDTO that = (DirectoryDTO) o;
         if (that.getId() == null || getId() == null) {
             return false;
         }

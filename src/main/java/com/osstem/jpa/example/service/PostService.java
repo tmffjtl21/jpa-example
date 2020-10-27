@@ -9,7 +9,7 @@ public interface PostService {
 
     void updatePost(PostDTO postDTO);
 
-    List<PostDTO> readPost();
+    List<PostDTO> getAllPost();
 
     void removePost(Long id);
 }

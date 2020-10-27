@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * The PostComment entity.
+ * The PostGroup entity.
  *
  * @author LEE TAEJIN
  * @since 2019.10.18
@@ -33,13 +33,13 @@ public class PostGroup extends AbstractAuditingEntity implements Serializable {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "directory_id", foreignKey = @ForeignKey(name = "FK_upost_group_directory"))
+    @JoinColumn(name = "directory_id")
     private Directory directory;
 
     @ManyToMany
     @JoinTable(name = "POST_GROUP_POST",
-            joinColumns = @JoinColumn(name="post_group_id", referencedColumnName="id"),
-            inverseJoinColumns = @JoinColumn(name="post_id", referencedColumnName="id"))
+            joinColumns = @JoinColumn(name = "post_group_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
     private Set<Post> posts = new HashSet<>();
 
     public Long getId() {
@@ -80,6 +80,18 @@ public class PostGroup extends AbstractAuditingEntity implements Serializable {
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
+    }
+
+    public PostGroup addPost(Post post) {
+        post.getPostGroups().add(this);
+        this.posts.add(post);
+        return this;
+    }
+
+    public PostGroup removePost(Post post) {
+        this.posts.remove(post);
+        post.getPostGroups().remove(this);
+        return this;
     }
 
     @Override

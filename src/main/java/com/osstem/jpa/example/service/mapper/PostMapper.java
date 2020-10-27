@@ -2,14 +2,16 @@ package com.osstem.jpa.example.service.mapper;
 
 import com.osstem.jpa.example.domain.Post;
 import com.osstem.jpa.example.service.dto.PostDTO;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {PostDetailsMapper.class, PostCommentMapper.class})
+import java.util.Optional;
+
+@Mapper(componentModel = "spring", uses = {PostDetailsMapper.class, PostCommentMapper.class, DirectoryMapper.class})
 public interface PostMapper {
 
-    @Mapping(target = "postCommentDTOs", source = "postComments")
-    @Mapping(target = "postDetailsDTO", source = "postDetails")
     PostDTO toDTO(Post entity);
 
     @Mapping(target = "createdBy", ignore = true)
@@ -25,5 +27,20 @@ public interface PostMapper {
         Post that = new Post();
         that.setId(id);
         return that;
+    }
+
+    @AfterMapping
+    default public void setConstraintsOnEntity(PostDTO dto, @MappingTarget Post entity) {
+        // entity 양방향 관계 등록
+        Optional.ofNullable(entity.getPostDetails())
+                .ifPresent(postDetails -> postDetails.setPost(entity));
+        Optional.ofNullable(entity.getPostComments())
+                .ifPresent(postComments -> postComments.forEach(comment -> comment.setPost(entity)));
+        Optional.ofNullable(entity.getPostGroups())
+                .ifPresent(postGroups -> postGroups.forEach(group -> group.addPost(entity)));
+    }
+
+    @AfterMapping
+    default public void setConstraintsOnDTO(Post entity, @MappingTarget PostDTO dto) {
     }
 }

@@ -28,7 +28,6 @@ public class PostComment extends AbstractAuditingEntity implements Serializable 
     private String review;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_upost_comment_post"))
     private Post post;
 
     public Long getId() {

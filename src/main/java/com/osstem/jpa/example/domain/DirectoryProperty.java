@@ -8,53 +8,50 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The PostDetails entity.
+ * The DirectoryProperty entity.
  *
  * @author LEE TAEJIN
  * @since 2019.10.18
  */
 @Entity
-@Table(name = "POST_DETAILS")
-public class PostDetails extends AbstractAuditingEntity implements Serializable {
+@Table(name = "DIRECTORY_PROPERTY")
+public class DirectoryProperty extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Long id;
+    @Column(name = "id", nullable = false, length = 50)
+    private String id;
 
-    /**
-     * description : @MapsId - pk를 fk로 같이 사용할 경우 ( 식별관계 ) 일 경우
-     */
+    @Column(name = "show_poster")
+    private Boolean showPoster;
+
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
-    private Post post;
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private Directory directory;
 
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public Boolean getShowPoster() {
+        return showPoster;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setShowPoster(Boolean showPoster) {
+        this.showPoster = showPoster;
     }
 
-    public Post getPost() {
-        return post;
+    public Directory getDirectory() {
+        return directory;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setDirectory(Directory directory) {
+        this.directory = directory;
     }
 
     @Override
@@ -65,7 +62,7 @@ public class PostDetails extends AbstractAuditingEntity implements Serializable 
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PostDetails that = (PostDetails) o;
+        DirectoryProperty that = (DirectoryProperty) o;
         if (that.getId() == null || getId() == null) {
             return false;
         }

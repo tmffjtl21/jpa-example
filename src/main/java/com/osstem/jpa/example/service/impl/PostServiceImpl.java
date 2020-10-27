@@ -1,8 +1,5 @@
 package com.osstem.jpa.example.service.impl;
 
-import com.osstem.jpa.example.domain.Post;
-import com.osstem.jpa.example.domain.PostComment;
-import com.osstem.jpa.example.domain.PostDetails;
 import com.osstem.jpa.example.repository.PostCommentRepository;
 import com.osstem.jpa.example.repository.PostDetailsRepository;
 import com.osstem.jpa.example.repository.PostRepository;
@@ -14,7 +11,6 @@ import com.osstem.jpa.example.service.mapper.PostMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,38 +44,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO createPost(PostDTO postDTO) {
-        Post post = postMapper.toEntity(postDTO);
-        final Post post1 = postRepository.save(post);   // post id load
-        if(postDTO.getPostCommentDTOs() != null){
-            List<PostComment> postComments = postCommentMapper.postCommentDTOsToPostComments(new ArrayList<>(postDTO.getPostCommentDTOs()));
-            postComments.forEach(comment -> {
-                comment.setPost(post1);
-                postCommentRepository.save(comment);
-            });
-        }
-        if(postDTO.getPostDetailsDTO() != null){
-            PostDetails postDetails = postDetailsMapper.toEntity(postDTO.getPostDetailsDTO());
-            postDetails.setPost(post1);
-            postDetailsRepository.save(postDetails);
-        }
-        postDTO.setId(post1.getId());
-        return postDTO;
+        return postMapper.toDTO(postRepository.save(postMapper.toEntity(postDTO)));
     }
 
     @Override
     public void updatePost(PostDTO postDTO) {
         postRepository.findById(postDTO.getId()).ifPresent(post -> post.setTitle(postDTO.getTitle()));
-        Optional.ofNullable(postDTO.getPostCommentDTOs())
+        Optional.ofNullable(postDTO.getPostComments())
                 .ifPresent(comments -> comments
-                        .forEach(commentDTO ->postCommentRepository.findById(commentDTO.getId())
+                        .forEach(commentDTO -> postCommentRepository.findById(commentDTO.getId())
                                 .ifPresent(comment -> comment.setReview(commentDTO.getReview()))));
-        Optional.ofNullable(postDTO.getPostDetailsDTO())
+        Optional.ofNullable(postDTO.getPostDetails())
                 .ifPresent(s -> postDetailsRepository.findById(s.getId())
                         .ifPresent(detail -> detail.setContent(s.getContent())));
     }
 
     @Override
-    public List<PostDTO> readPost() {
+    public List<PostDTO> getAllPost() {
         return postRepository.findAll().stream().map(postMapper::toDTO).collect(Collectors.toList());
     }
 

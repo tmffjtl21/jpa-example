@@ -33,12 +33,15 @@ public class Directory extends AbstractAuditingEntity implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "POST_DIRECTORY",
-            joinColumns = @JoinColumn(name="directory_id", referencedColumnName="id"),
-            inverseJoinColumns = @JoinColumn(name="post_id", referencedColumnName="id"))
+            joinColumns = @JoinColumn(name = "directory_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
     private Set<Post> posts = new HashSet<>();
 
     @OneToMany(mappedBy = "directory", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostGroup> postGroups = new HashSet<>();
+
+    @OneToOne(mappedBy = "directory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private DirectoryProperty directoryProperty;
 
     public String getId() {
         return id;
@@ -78,6 +81,14 @@ public class Directory extends AbstractAuditingEntity implements Serializable {
 
     public void setPostGroups(Set<PostGroup> postGroups) {
         this.postGroups = postGroups;
+    }
+
+    public DirectoryProperty getDirectoryProperty() {
+        return directoryProperty;
+    }
+
+    public void setDirectoryProperty(DirectoryProperty directoryProperty) {
+        this.directoryProperty = directoryProperty;
     }
 
     @Override

@@ -6,28 +6,28 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PostDetailsDTO implements Serializable {
+public class DirectoryPropertyDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
 
-    private String content;
+    private Boolean showPoster;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public Boolean getShowPoster() {
+        return showPoster;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setShowPoster(Boolean showPoster) {
+        this.showPoster = showPoster;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class PostDetailsDTO implements Serializable {
             return false;
         }
 
-        PostDetailsDTO that = (PostDetailsDTO) o;
+        DirectoryPropertyDTO that = (DirectoryPropertyDTO) o;
         if (that.getId() == null || getId() == null) {
             return false;
         }

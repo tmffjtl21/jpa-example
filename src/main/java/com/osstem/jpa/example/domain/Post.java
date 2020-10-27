@@ -2,6 +2,10 @@ package com.osstem.jpa.example.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +20,12 @@ import java.util.Set;
  * @since 2019.10.18
  */
 @Entity
+@FilterDef(name="dateDueFilter", parameters= {
+        @ParamDef( name="dateDue", type="date" ),
+})
+@Filters( {
+        @Filter(name="dateDueFilter", condition="dateDue = :dateDue"),
+})
 @Table(name = "POST")
 public class Post extends AbstractAuditingEntity implements Serializable {
 
@@ -29,10 +39,10 @@ public class Post extends AbstractAuditingEntity implements Serializable {
     @Column(name = "title", length = 50)
     private String title;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<PostComment> postComments = new HashSet<>();
 
-    @OneToOne(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, optional = false)
     private PostDetails postDetails;
 
     @ManyToMany(mappedBy = "posts")
@@ -65,11 +75,24 @@ public class Post extends AbstractAuditingEntity implements Serializable {
         this.postComments = postComments;
     }
 
+    public Post addPostComment(PostComment postComment) {
+        postComment.setPost(this);
+        this.postComments.add(postComment);
+        return this;
+    }
+
     public PostDetails getPostDetails() {
         return postDetails;
     }
 
     public void setPostDetails(PostDetails postDetails) {
+        if (postDetails == null) {
+            if (this.postDetails != null) {
+                this.postDetails.setPost(null);
+            }
+        } else {
+            postDetails.setPost(this);
+        }
         this.postDetails = postDetails;
     }
 

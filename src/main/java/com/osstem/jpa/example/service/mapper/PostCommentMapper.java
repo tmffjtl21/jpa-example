@@ -2,8 +2,10 @@ package com.osstem.jpa.example.service.mapper;
 
 import com.osstem.jpa.example.domain.PostComment;
 import com.osstem.jpa.example.service.dto.PostCommentDTO;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -22,12 +24,8 @@ public interface PostCommentMapper {
 
     List<PostComment> postCommentDTOsToPostComments(List<PostCommentDTO> postCommentDTOs);
 
-    default PostComment postCommentFromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        PostComment postComment = new PostComment();
-        postComment.setId(id);
-        return postComment;
+    @AfterMapping
+    default public void setConstraintsOnEntity(PostCommentDTO dto, @MappingTarget PostComment entity) {
+        if (entity.getId() != null && entity.getId() == 0) entity.setId(null);
     }
 }

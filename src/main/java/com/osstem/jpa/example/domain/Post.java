@@ -2,12 +2,12 @@ package com.osstem.jpa.example.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.Filters;
-import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -20,11 +20,13 @@ import java.util.Set;
  * @since 2019.10.18
  */
 @Entity
-@FilterDef(name="dateDueFilter", parameters= {
-        @ParamDef( name="dateDue", type="date" ),
+@FilterDefs({
+        @FilterDef(name = "idFilter",parameters = @ParamDef(name = "id", type = "string")),
+        @FilterDef(name = "titleFilter",parameters = @ParamDef(name = "title", type = "string"))
 })
-@Filters( {
-        @Filter(name="dateDueFilter", condition="dateDue = :dateDue"),
+@Filters({
+        @Filter(name = "idFilter",condition = "id = :id"),
+        @Filter(name = "titleFilter",condition = "title = :title")
 })
 @Table(name = "POST")
 public class Post extends AbstractAuditingEntity implements Serializable {

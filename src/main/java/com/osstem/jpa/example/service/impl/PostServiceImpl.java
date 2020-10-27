@@ -1,5 +1,6 @@
 package com.osstem.jpa.example.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osstem.jpa.example.repository.PostCommentRepository;
 import com.osstem.jpa.example.repository.PostDetailsRepository;
 import com.osstem.jpa.example.repository.PostRepository;
@@ -8,8 +9,11 @@ import com.osstem.jpa.example.service.dto.PostDTO;
 import com.osstem.jpa.example.service.mapper.PostCommentMapper;
 import com.osstem.jpa.example.service.mapper.PostDetailsMapper;
 import com.osstem.jpa.example.service.mapper.PostMapper;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -31,15 +35,18 @@ public class PostServiceImpl implements PostService {
 
     private PostDetailsMapper postDetailsMapper;
 
+    private EntityManager entityManager;
+
     public PostServiceImpl(PostRepository postRepository, PostMapper postMapper,
                            PostCommentRepository postCommentRepository, PostCommentMapper postCommentMapper,
-                           PostDetailsRepository postDetailsRepository, PostDetailsMapper postDetailsMapper) {
+                           PostDetailsRepository postDetailsRepository, PostDetailsMapper postDetailsMapper, EntityManager entityManager) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.postCommentRepository = postCommentRepository;
         this.postCommentMapper = postCommentMapper;
         this.postDetailsRepository = postDetailsRepository;
         this.postDetailsMapper = postDetailsMapper;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -67,5 +74,17 @@ public class PostServiceImpl implements PostService {
     @Override
     public void removePost(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PostDTO> getAllPostByFilter(String filter1, String filter2) {
+
+        Session session = entityManager.unwrap(Session.class);
+        if(!ObjectUtils.isEmpty(filter1))
+            session.enableFilter("idFilter").setParameter("id", filter1);
+        if(!ObjectUtils.isEmpty(filter2))
+            session.enableFilter("titleFilter").setParameter("title", filter2);
+
+        return postRepository.findAll().stream().map(postMapper::toDTO).collect(Collectors.toList());
     }
 }

@@ -81,4 +81,18 @@ public class PostResource {
         postService.removePost(id);
         return ResponseEntity.accepted().body(null);
     }
+
+    /**
+     * READ  /post : Read All Post
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of post in body
+     * @throws Exception
+     */
+    @GetMapping("/post/filtering")
+    @ApiOperation(value = "getAllPost", notes = "1) Read Post Entity By Filter")
+    public ResponseEntity<List<PostDTO>> getAllPost(@RequestParam(required = false) String filter1,
+                                                    @RequestParam(required = false) String filter2) throws Exception {
+        List<PostDTO> list = postService.getAllPostByFilter(filter1, filter2);
+        return list.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(list);
+    }
 }

@@ -12,4 +12,6 @@ public interface PostService {
     List<PostDTO> getAllPost();
 
     void removePost(Long id);
+
+    List<PostDTO> getAllPostByFilter(String filter1, String filter2);
 }

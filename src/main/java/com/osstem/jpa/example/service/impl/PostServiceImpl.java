@@ -1,6 +1,5 @@
 package com.osstem.jpa.example.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osstem.jpa.example.repository.PostCommentRepository;
 import com.osstem.jpa.example.repository.PostDetailsRepository;
 import com.osstem.jpa.example.repository.PostRepository;

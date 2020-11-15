@@ -85,6 +85,7 @@ public class PostResource {
     /**
      * READ  /post : Read All Post
      *
+     * @See https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#pc-filter
      * @return the ResponseEntity with status 200 (OK) and the list of post in body
      * @throws Exception
      */
